@@ -5,7 +5,10 @@ using UnityEngine;
 public class HideBackgroundSprite : MonoBehaviour
 {
     private GameObject player;
+    private SpriteRenderer playerRenderer;
     private SpriteRenderer[] renderers;
+
+    private bool _playerHidden;
 
     [SerializeField]
     private float _switchHeight;
@@ -13,6 +16,7 @@ public class HideBackgroundSprite : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        playerRenderer = player.GetComponentInChildren<SpriteRenderer>();
         renderers = GetComponentsInChildren<SpriteRenderer>();
     }
 
@@ -23,6 +27,31 @@ public class HideBackgroundSprite : MonoBehaviour
         foreach (var renderer in renderers)
         {
             renderer.sortingLayerName = yDiff <= 0 ? "Background" : "Foreground";
+            renderer.color = SetColorAlpha(renderer.color, _playerHidden ? 0.5f : 1);
+        }
+    }
+
+    private Color SetColorAlpha(Color color, float value)
+    {
+        color.a = value;
+        return color;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            _playerHidden = true;
+            Debug.Log("Making backgrounds sprite transparent");
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            _playerHidden = false;
+            Debug.Log("Making backgrounds sprite opaque");
         }
     }
 
