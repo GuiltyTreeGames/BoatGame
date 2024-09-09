@@ -188,7 +188,7 @@ Transform:
   m_GameObject: {fileID: 260403153}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.46, y: -0.17, z: 0}
+  m_LocalPosition: {x: 7, y: 0.32, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -386,7 +386,8 @@ GameObject:
   m_Component:
   - component: {fileID: 372154917}
   - component: {fileID: 372154919}
-  - component: {fileID: 372154918}
+  - component: {fileID: 372154921}
+  - component: {fileID: 372154920}
   m_Layer: 0
   m_Name: RoomChanger
   m_TagString: Untagged
@@ -409,20 +410,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2067147787}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &372154918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 372154916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a010393f2db9b9b41a79d53f6b7510f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _targetRoom: TestRight
-  _targetDoor: 
 --- !u!61 &372154919
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -468,6 +455,39 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 7.11}
   m_EdgeRadius: 0
+--- !u!114 &372154920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372154916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a010393f2db9b9b41a79d53f6b7510f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  door: {fileID: 372154921}
+--- !u!114 &372154921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372154916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cf9169879a65654494ad34217e17abe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _id: Right
+  _targetRoom: TestRight
+  _targetId: Left
+  _spawn:
+    preservePositionX: 0
+    customPositionX: 7
+    preservePositionY: 1
+    customPositionY: 0
 --- !u!1 &391320361
 GameObject:
   m_ObjectHideFlags: 0

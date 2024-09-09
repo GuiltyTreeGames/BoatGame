@@ -4,11 +4,11 @@ using UnityEngine.SceneManagement;
 
 public class RoomManager : BaseManager
 {
-    private ChangeRoomOnTrigger tempObject;
+    private DoorEnterOnTrigger tempObject;
 
     public override void OnInitialize()
     {
-        tempObject = new GameObject("Temp").AddComponent<ChangeRoomOnTrigger>();
+        tempObject = new GameObject("Temp").AddComponent<DoorEnterOnTrigger>();
         Object.DontDestroyOnLoad(tempObject.gameObject);
     }
 
