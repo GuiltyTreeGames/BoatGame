@@ -15,6 +15,13 @@ public class SpawnManager : BaseManager
         _playerPrefab = Resources.Load<GameObject>("Player");
 
         Core.RoomManager.OnRoomLoaded += OnRoomLoaded;
+        Core.RoomManager.OnRoomUnloaded += OnRoomUnloaded;
+    }
+
+    public override void OnDispose()
+    {
+        Core.RoomManager.OnRoomLoaded -= OnRoomLoaded;
+        Core.RoomManager.OnRoomUnloaded -= OnRoomUnloaded;
     }
 
     public void StorePlayerInfo(string targetId)
@@ -71,5 +78,10 @@ public class SpawnManager : BaseManager
     private void OnRoomLoaded(string room)
     {
         SpawnPlayer();
+    }
+
+    private void OnRoomUnloaded(string room)
+    {
+        SpawnedPlayer = null;
     }
 }

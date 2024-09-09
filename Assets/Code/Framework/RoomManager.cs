@@ -45,7 +45,7 @@ public class RoomManager : BaseManager
         }
 
         OnRoomUnloaded?.Invoke(SceneManager.GetActiveScene().name);
-        SceneManager.LoadSceneAsync(room);
+        SceneManager.LoadScene(room);
         OnRoomLoaded?.Invoke(SceneManager.GetActiveScene().name);
 
         startTime = Time.time;

@@ -19,4 +19,13 @@ public class Door : MonoBehaviour
         Core.SpawnManager.StorePlayerInfo(_targetId);
         Core.RoomManager.ChangeRoom(_targetRoom);
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        float x = _spawn.preservePositionX ? transform.position.x : _spawn.customPositionX;
+        float y = _spawn.preservePositionY ? transform.position.y : _spawn.customPositionY;
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(new Vector3(x, y), 0.2f);
+    }
 }

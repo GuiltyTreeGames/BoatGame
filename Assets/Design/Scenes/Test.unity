@@ -256,7 +256,7 @@ GameObject:
   - component: {fileID: 372154921}
   - component: {fileID: 372154920}
   m_Layer: 0
-  m_Name: RoomChanger
+  m_Name: RightDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1478,7 +1478,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2067147787}
   m_Layer: 0
-  m_Name: Interactables
+  m_Name: Doors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
