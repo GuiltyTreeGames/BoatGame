@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class Core
@@ -7,16 +8,14 @@ public static class Core
     private static bool _initialized;
     private static readonly List<BaseManager> _managers = new();
 
-    static Core()
-    {
-
-    }
-
     [RuntimeInitializeOnLoadMethod]
     static void Startup()
     {
         if (_initialized)
             return;
+
+        LoadManagers();
+        Application.quitting += Shutdown;
 
         Debug.Log("Initializing core managers");
         foreach (var manager in _managers)
@@ -25,7 +24,6 @@ public static class Core
             manager.OnAllInitialized();
         Debug.Log("Initialized all core managers");
 
-        Application.quitting += Shutdown;
         _initialized = true;
     }
 
@@ -39,4 +37,13 @@ public static class Core
             manager.OnDispose();
         Debug.Log("Disposed all core managers");
     }
+
+    static void LoadManagers()
+    {
+        _managers.AddRange(typeof(Core).GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
+            .Where(x => x.PropertyType.IsSubclassOf(typeof(BaseManager)))
+            .Select(x => x.GetValue(null) as BaseManager));
+    }
+
+    public static RoomManager RoomManager { get; private set; } = new();
 }
