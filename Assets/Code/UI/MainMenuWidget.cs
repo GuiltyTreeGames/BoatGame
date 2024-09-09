@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,11 +5,19 @@ public class MainMenuWidget : MonoBehaviour
 {
     [SerializeField]
     private string _firstScene;
+    [SerializeField]
+    private GameObject _content;
+
+    void Awake()
+    {
+        SetMenuStatus(false);
+    }
 
     public void StartGame()
     {
         Debug.Log("Starting game");
         SceneManager.LoadScene(_firstScene);
+        SetMenuStatus(false);
     }
 
     public void QuitGame()
@@ -22,5 +28,10 @@ public class MainMenuWidget : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void SetMenuStatus(bool open)
+    {
+        _content.SetActive(open);
     }
 }

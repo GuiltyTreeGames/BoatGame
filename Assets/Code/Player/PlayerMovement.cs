@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float _moveSpeed = 1;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponentInChildren<Rigidbody2D>();
         col = GetComponentInChildren<BoxCollider2D>();
