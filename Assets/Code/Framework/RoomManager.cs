@@ -19,7 +19,6 @@ public class RoomManager : BaseManager
     public override void OnAllInitialized()
     {
         // If not starting in main menu, fake a scene load event
-        SceneManager.sceneLoaded += OnSceneLoaded;
         string room = SceneManager.GetActiveScene().name;
         if (room != "MainMenu")
         {
@@ -36,19 +35,10 @@ public class RoomManager : BaseManager
         tempObject.StartCoroutine(FadeOutCoroutine(room));
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == "MainMenu")
-            return;
-
-        SceneManager.SetActiveScene(scene);
-        SceneManager.UnloadSceneAsync(PreviousRoom);
-
-        // Very temporary to do this
-        tempObject.StartCoroutine(FadeInCoroutine());
-    }
-
-    IEnumerator FadeOutCoroutine(string room)
+    /// <summary>
+    /// Step 1: Fade out, then load the loading level
+    /// </summary>
+    private IEnumerator FadeOutCoroutine(string room)
     {
         float startTime = Time.time;
         Debug.Log("Starting fade out");
@@ -70,10 +60,54 @@ public class RoomManager : BaseManager
 
         Debug.Log($"Unloaded room {PreviousRoom}");
         OnRoomUnloaded?.Invoke(PreviousRoom);
-        SceneManager.LoadScene(room, LoadSceneMode.Additive);
+
+        SceneManager.sceneLoaded += OnOpenLoading;
+        SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
     }
 
-    IEnumerator FadeInCoroutine()
+    /// <summary>
+    /// Step 2: Unload the previous room
+    /// </summary>
+    private void OnOpenLoading(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnOpenLoading;
+
+        SceneManager.SetActiveScene(scene);
+        SceneManager.UnloadSceneAsync(PreviousRoom);
+
+        SceneManager.sceneUnloaded += OnClosePrevious;
+    }
+
+    /// <summary>
+    /// Step 3: Load the next room
+    /// </summary>
+    private void OnClosePrevious(Scene scene)
+    {
+        SceneManager.sceneUnloaded -= OnClosePrevious;
+
+        SceneManager.LoadScene(NextRoom, LoadSceneMode.Additive);
+
+        SceneManager.sceneLoaded += OnOpenNext;
+    }
+
+    /// <summary>
+    /// Step 4: Unload the loading level
+    /// </summary>
+    private void OnOpenNext(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnOpenNext;
+
+        SceneManager.SetActiveScene(scene);
+        SceneManager.UnloadSceneAsync("Loading");
+
+        // Very temporary to do this
+        tempObject.StartCoroutine(FadeInCoroutine());
+    }
+
+    /// <summary>
+    /// Step 5: Fade in
+    /// </summary>
+    private IEnumerator FadeInCoroutine()
     {
         CurrentRoom = NextRoom;
         NextRoom = string.Empty;
