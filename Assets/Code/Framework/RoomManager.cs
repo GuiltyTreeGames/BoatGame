@@ -6,6 +6,10 @@ public class RoomManager : BaseManager
 {
     private DoorEnterOnTrigger tempObject;
 
+    public string PreviousRoom { get; private set; } = string.Empty;
+    public string CurrentRoom { get; private set; } = string.Empty;
+    public string NextRoom { get; private set; } = string.Empty;
+
     public override void OnInitialize()
     {
         tempObject = new GameObject("Temp").AddComponent<DoorEnterOnTrigger>();
@@ -18,7 +22,10 @@ public class RoomManager : BaseManager
         SceneManager.sceneLoaded += OnSceneLoaded;
         string room = SceneManager.GetActiveScene().name;
         if (room != "MainMenu")
+        {
+            CurrentRoom = room;
             OnRoomLoaded?.Invoke(room);
+        }
     }
 
     public void ChangeRoom(string room)
@@ -33,6 +40,9 @@ public class RoomManager : BaseManager
     {
         if (scene.name == "MainMenu")
             return;
+
+        SceneManager.SetActiveScene(scene);
+        SceneManager.UnloadSceneAsync(PreviousRoom);
 
         // Very temporary to do this
         tempObject.StartCoroutine(FadeInCoroutine());
@@ -54,13 +64,22 @@ public class RoomManager : BaseManager
                 break;
         }
 
-        OnRoomUnloaded?.Invoke(SceneManager.GetActiveScene().name);
-        SceneManager.LoadScene(room);
+        PreviousRoom = CurrentRoom;
+        CurrentRoom = string.Empty;
+        NextRoom = room;
+
+        Debug.Log($"Unloaded room {PreviousRoom}");
+        OnRoomUnloaded?.Invoke(PreviousRoom);
+        SceneManager.LoadScene(room, LoadSceneMode.Additive);
     }
 
     IEnumerator FadeInCoroutine()
     {
-        OnRoomLoaded?.Invoke(SceneManager.GetActiveScene().name);
+        CurrentRoom = NextRoom;
+        NextRoom = string.Empty;
+
+        Debug.Log($"Loaded room {CurrentRoom}");
+        OnRoomLoaded?.Invoke(CurrentRoom);
 
         float startTime = Time.time;
         Debug.Log("Starting fade in");
