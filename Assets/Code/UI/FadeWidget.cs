@@ -15,7 +15,7 @@ public class FadeWidget : MonoBehaviour
         Core.RoomManager.OnFade -= OnFade;
     }
 
-    void Start()
+    void Awake()
     {
         image = GetComponent<Image>();
         image.color = new Color32(0, 0, 0, 0);
