@@ -12,6 +12,14 @@ public class RoomManager : BaseManager
         Object.DontDestroyOnLoad(tempObject.gameObject);
     }
 
+    public override void OnAllInitialized()
+    {
+        // If not starting in main menu, fake a scene load event
+        string room = SceneManager.GetActiveScene().name;
+        if (room != "MainMenu")
+            OnRoomLoaded?.Invoke(room);
+    }
+
     public void ChangeRoom(string room)
     {
         Debug.Log("Changing to room " + room);
@@ -36,7 +44,9 @@ public class RoomManager : BaseManager
                 break;
         }
 
+        OnRoomUnloaded?.Invoke(SceneManager.GetActiveScene().name);
         SceneManager.LoadSceneAsync(room);
+        OnRoomLoaded?.Invoke(SceneManager.GetActiveScene().name);
 
         startTime = Time.time;
         Debug.Log("Starting fade in");
@@ -52,6 +62,10 @@ public class RoomManager : BaseManager
                 break;
         }
     }
+
+    public delegate void RoomDelegate(string room);
+    public event RoomDelegate OnRoomLoaded;
+    public event RoomDelegate OnRoomUnloaded;
 
     public delegate void FadeDelegate(float percent);
     public event FadeDelegate OnFade;

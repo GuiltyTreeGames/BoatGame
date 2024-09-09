@@ -11,15 +11,12 @@ public class Door : MonoBehaviour
     [SerializeField]
     private SpawnInfo _spawn;
 
+    public string DoorId => _id;
+    public SpawnInfo DoorSpawn => _spawn;
+
     public void EnterDoor()
     {
-        // Set spawn properties
-
+        Core.SpawnManager.StorePlayerInfo(_targetId);
         Core.RoomManager.ChangeRoom(_targetRoom);
-    }
-
-    public SpawnInfo GetSpawnInfo()
-    {
-        return _spawn;
     }
 }

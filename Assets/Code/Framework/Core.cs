@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public static class Core
 {
@@ -15,6 +16,8 @@ public static class Core
 
         LoadManagers();
         Application.quitting += Shutdown;
+        //SceneManager.sceneLoaded += SceneLoaded;
+        //SceneManager.sceneUnloaded += SceneUnloaded;
 
         Debug.Log("Initializing core managers");
         foreach (var manager in _managers)
@@ -25,6 +28,26 @@ public static class Core
 
         _initialized = true;
     }
+
+    //static void SceneLoaded(Scene scene, LoadSceneMode mode)
+    //{
+    //    if (scene.name == "MainMenu")
+    //        return;
+
+    //    Debug.Log($"Loaded scene {scene.name}");
+    //    foreach (var manager in _managers)
+    //        manager.OnRoomLoaded(scene.name);
+    //}
+
+    //static void SceneUnloaded(Scene scene)
+    //{
+    //    if (scene.name == "MainMenu")
+    //        return;
+
+    //    Debug.Log($"Unloaded scene {scene.name}");
+    //    foreach (var manager in _managers)
+    //        manager.OnRoomUnloaded(scene.name);
+    //}
 
     static void Shutdown()
     {
@@ -46,4 +69,5 @@ public static class Core
 
     public static CanvasManager CanvasManager { get; private set; } = new();
     public static RoomManager RoomManager { get; private set; } = new();
+    public static SpawnManager SpawnManager { get; private set; } = new();
 }
