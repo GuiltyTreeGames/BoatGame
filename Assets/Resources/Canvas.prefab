@@ -98,6 +98,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4645974581235823885}
   - component: {fileID: 893868168664295689}
+  - component: {fileID: 8081597042504795887}
   - component: {fileID: 269840031979360563}
   m_Layer: 5
   m_Name: Start
@@ -133,6 +134,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2761131306653502973}
   m_CullTransparentMesh: 1
+--- !u!114 &8081597042504795887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2761131306653502973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8850713df8b49f4caf2226f667abeba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  onClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &269840031979360563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,8 +180,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -231,6 +249,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6151690498520932108}
+  - component: {fileID: 3814469559542466319}
   m_Layer: 5
   m_Name: Options
   m_TagString: Untagged
@@ -259,6 +278,22 @@ RectTransform:
   m_AnchoredPosition: {x: -120, y: 0}
   m_SizeDelta: {x: 300, y: 500}
   m_Pivot: {x: 1, y: 0}
+--- !u!114 &3814469559542466319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2945108507548321267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0e18ba2a27605f44b7817c011a21325, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _selectables:
+  - {fileID: 8081597042504795887}
+  - {fileID: 6140833399782732474}
+  _vertical: 1
 --- !u!1 &3041245159008400594
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,6 +304,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4522201772408921356}
   - component: {fileID: 7550975000598855406}
+  - component: {fileID: 6140833399782732474}
   - component: {fileID: 3770820537229665783}
   m_Layer: 5
   m_Name: Quit
@@ -304,6 +340,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3041245159008400594}
   m_CullTransparentMesh: 1
+--- !u!114 &6140833399782732474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3041245159008400594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8850713df8b49f4caf2226f667abeba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  onClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &3770820537229665783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,8 +386,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -606,7 +659,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6556604, g: 1, b: 0.97313905, a: 1}
+  m_Color: {r: 0.07725169, g: 0.5283019, b: 0.49242288, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -765,8 +818,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
