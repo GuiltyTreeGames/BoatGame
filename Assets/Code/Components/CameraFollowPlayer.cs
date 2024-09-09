@@ -10,7 +10,6 @@ public class CameraFollowPlayer : MonoBehaviour
     private Vector2 _yBounds;
 
     private Camera cam;
-    private Transform _target;
 
     public void UpdateBounds(Vector2 x, Vector2 y)
     {
@@ -21,7 +20,6 @@ public class CameraFollowPlayer : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-        _target = GameObject.FindGameObjectWithTag("Player").transform;
         transform.position = CalculateTargetPosition();
     }
 
@@ -32,7 +30,8 @@ public class CameraFollowPlayer : MonoBehaviour
 
     private Vector3 CalculateTargetPosition()
     {
-        Vector3 targetPosition = new(_target.position.x, _target.position.y, -10);
+        Vector3 targetPosition = Core.SpawnManager.SpawnedPlayer.transform.position;
+        targetPosition.z = -10;
 
         // x bounds
         if (_xBounds.x == _xBounds.y)
