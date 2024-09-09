@@ -1,11 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RoomManager : BaseManager
 {
     public override void OnInitialize()
     {
-        Debug.Log("Starting room manager");
+    }
+
+    public void ChangeRoom(string room)
+    {
+        Debug.Log("Changing to room " + room);
+        SceneManager.LoadSceneAsync(room);
     }
 }
