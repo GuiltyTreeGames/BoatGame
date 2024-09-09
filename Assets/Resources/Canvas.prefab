@@ -150,7 +150,19 @@ MonoBehaviour:
   _selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   onClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4038510910956513067}
+        m_TargetAssemblyTypeName: MainMenuWidget, Assembly-CSharp
+        m_MethodName: StartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &269840031979360563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,7 +368,19 @@ MonoBehaviour:
   _selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   onClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4038510910956513067}
+        m_TargetAssemblyTypeName: MainMenuWidget, Assembly-CSharp
+        m_MethodName: QuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3770820537229665783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,6 +519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17d9d60440e479d44838e7e32846e4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _firstScene: Test
 --- !u!1 &4863795190719069281
 GameObject:
   m_ObjectHideFlags: 0
