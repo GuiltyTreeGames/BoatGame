@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -45,5 +44,6 @@ public static class Core
             .Select(x => x.GetValue(null) as BaseManager));
     }
 
+    public static CanvasManager CanvasManager { get; private set; } = new();
     public static RoomManager RoomManager { get; private set; } = new();
 }
