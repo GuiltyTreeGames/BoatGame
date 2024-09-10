@@ -91,6 +91,7 @@ public class RoomManager : BaseManager
     {
         float startTime = Time.time;
         Debug.Log("Starting fade out");
+        Core.InputManager.AddInputBlock(FADE_BLOCK);
 
         while (true)
         {
@@ -157,6 +158,7 @@ public class RoomManager : BaseManager
 
         float startTime = Time.time;
         Debug.Log("Starting fade in");
+        Core.InputManager.RemoveInputBlock(FADE_BLOCK);
 
         while (true)
         {
@@ -176,6 +178,11 @@ public class RoomManager : BaseManager
 
     public delegate void FadeDelegate(float percent);
     public event FadeDelegate OnFade;
+
+    private static readonly InputBlock FADE_BLOCK = new InputBlock(new InputType[]
+    {
+        InputType.All
+    });
 
     private const float FADE_TIME = 0.5f;
 }

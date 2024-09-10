@@ -24,12 +24,13 @@ public class SelectableGroup : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(_vertical ? KeyCode.W : KeyCode.A))
-            ChangeSelection(-1);
-        if (Input.GetKeyDown(_vertical ? KeyCode.S : KeyCode.D))
-            ChangeSelection(1);
+        float change = Core.InputManager.GetAxisDown(_vertical ? InputType.UIVertical : InputType.UIHorizontal);
+        if (change != 0)
+        {
+            ChangeSelection((int)change);
+        }
 
-        if (Input.GetButtonDown("Submit"))
+        if (Core.InputManager.GetButtonDown(InputType.UIConfirm))
             SelectedElement.OnClick();
     }
 
