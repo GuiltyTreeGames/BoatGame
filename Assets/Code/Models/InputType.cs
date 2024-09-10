@@ -1,18 +1,20 @@
 
-[System.Flags]
 public enum InputType
 {
-    MoveHorizontal = 0x0001,
-    MoveVertical = 0x0002,
-    UIHorizontal = 0x0004,
-    UIVertical = 0x0008,
+    // Axes
+    MoveHorizontal,
+    MoveVertical,
+    UIHorizontal,
+    UIVertical,
 
-    Pause = 0x0010,
-    Interact = 0x0020,
-    UIConfirm = 0x0040,
-    UITabLeft = 0x0080,
+    // General input
+    Pause,
+    Interact,
 
-    UITabRight = 0x0100,
+    // UI input
+    UIConfirm,
+    UITabLeft,
+    UITabRight,
 
-    Any = 0xFFFF
+    All
 }

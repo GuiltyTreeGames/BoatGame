@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -42,6 +41,6 @@ public class InputManager : BaseManager
 
     public bool IsInputBlocked(InputType input)
     {
-        return _inputBlocks.Where(x => x.BlockedInputs.Contains(InputType.Any) || x.BlockedInputs.Contains(input)).Count() > 0;
+        return _inputBlocks.Any(x => x.BlockedInputs.Contains(InputType.All) || x.BlockedInputs.Contains(input));
     }
 }

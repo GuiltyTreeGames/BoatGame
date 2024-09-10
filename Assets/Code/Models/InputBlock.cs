@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 
 public class InputBlock
 {
-    public InputType BlockedInput { get; }
+    public IEnumerable<InputType> BlockedInputs { get; }
 
-    public InputBlock(InputType blockedInput)
+    public InputBlock(IEnumerable<InputType> blockedInputs)
     {
-        BlockedInput = blockedInput;
+        BlockedInputs = blockedInputs;
     }
 }
