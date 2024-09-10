@@ -1,20 +1,17 @@
 
 public enum InputType
 {
-    // Axes
+    // Gameplay input
     MoveHorizontal,
     MoveVertical,
-    UIHorizontal,
-    UIVertical,
-
-    // General input
     Pause,
     Interact,
 
     // UI input
+    UIHorizontal,
+    UIVertical,
     UIConfirm,
-    UITabLeft,
-    UITabRight,
+    UICancel,
 
     All
 }
