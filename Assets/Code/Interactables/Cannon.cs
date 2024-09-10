@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class Cannon : Interactable
 {
-
+    protected override void OnInteract()
+    {
+        Debug.Log("Shooting cannon");
+    }
 }

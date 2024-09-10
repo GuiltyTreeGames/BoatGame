@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour
@@ -12,13 +10,19 @@ public abstract class Interactable : MonoBehaviour
     void Update()
     {
         _outline.SetActive(_playerInRange);
+
+        if (Input.GetButtonDown("Interact"))
+        {
+            Debug.Log($"Player interacted with {GetType().Name}");
+            OnInteract();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log($"Player entered interactable range for {name}");
+            Debug.Log($"Player entered interactable range for {GetType().Name}");
             _playerInRange = true;
         }
     }
@@ -27,8 +31,10 @@ public abstract class Interactable : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log($"Player left interactable range for {name}");
+            Debug.Log($"Player left interactable range for {GetType().Name}");
             _playerInRange = false;
         }
     }
+
+    protected abstract void OnInteract();
 }
