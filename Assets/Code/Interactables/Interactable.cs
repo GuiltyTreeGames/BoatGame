@@ -11,7 +11,7 @@ public abstract class Interactable : MonoBehaviour
     {
         _outline.SetActive(_playerInRange);
 
-        if (Input.GetButtonDown("Interact"))
+        if (Core.InputManager.GetButtonDown(InputType.Interact))
         {
             Debug.Log($"Player interacted with {GetType().Name}");
             OnInteract();

@@ -39,6 +39,16 @@ public class InputManager : BaseManager
         return !IsInputBlocked(input) ? Input.GetAxisRaw(input.ToString()) : 0f;
     }
 
+    public float GetAxisDown(InputType input)
+    {
+        return GetButtonDown(input) ? Input.GetAxisRaw(input.ToString()) : 0f;
+    }
+
+    public float GetAxisUp(InputType input)
+    {
+        return GetButtonUp(input) ? Input.GetAxisRaw(input.ToString()) : 0f;
+    }
+
     public bool IsInputBlocked(InputType input)
     {
         return _inputBlocks.Any(x => x.BlockedInputs.Contains(InputType.All) || x.BlockedInputs.Contains(input));

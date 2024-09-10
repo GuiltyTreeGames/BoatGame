@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
@@ -8,8 +6,8 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
+        float x = Core.InputManager.GetAxis(InputType.MoveHorizontal);
+        float y = Core.InputManager.GetAxis(InputType.MoveVertical);
         MovementDirection = new Vector2(x, y);
     }
 }
