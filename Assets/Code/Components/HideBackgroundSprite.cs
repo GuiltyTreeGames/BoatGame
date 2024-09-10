@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HideBackgroundSprite : MonoBehaviour
 {
-    private GameObject player;
-    private SpriteRenderer playerRenderer;
     private SpriteRenderer[] renderers;
 
     private bool _playerHidden;
@@ -13,17 +9,15 @@ public class HideBackgroundSprite : MonoBehaviour
     [SerializeField]
     private float _switchHeight;
 
-    void Start()
+    void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-        playerRenderer = player.GetComponentInChildren<SpriteRenderer>();
         renderers = GetComponentsInChildren<SpriteRenderer>();
     }
 
     void Update()
     {
-        float yDiff = player.transform.position.y - (transform.position.y + _switchHeight);
-        
+        float yDiff = Core.SpawnManager.SpawnedPlayer.transform.position.y - (transform.position.y + _switchHeight);
+
         foreach (var renderer in renderers)
         {
             renderer.sortingLayerName = yDiff <= 0 ? "Background" : "Foreground";
