@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenuWidget : MonoBehaviour
 {
@@ -16,7 +15,7 @@ public class MainMenuWidget : MonoBehaviour
     public void StartGame()
     {
         Debug.Log("Starting game");
-        SceneManager.LoadScene(_firstScene);
+        Core.RoomManager.ChangeRoomInstant(_firstScene);
         SetMenuStatus(false);
     }
 

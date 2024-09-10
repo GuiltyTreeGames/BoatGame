@@ -27,7 +27,56 @@ public class RoomManager : BaseManager
         }
     }
 
-    public void ChangeRoom(string room)
+    /// <summary>
+    /// Updates the room properties and calls the unload event
+    /// </summary>
+    private void PerformUnload(string room)
+    {
+        PreviousRoom = CurrentRoom;
+        CurrentRoom = string.Empty;
+        NextRoom = room;
+
+        Debug.Log($"Unloaded room {PreviousRoom}");
+        OnRoomUnloaded?.Invoke(PreviousRoom);
+    }
+
+    /// <summary>
+    /// Updates the room properties and calls the load event
+    /// </summary>
+    private void PerformLoad()
+    {
+        CurrentRoom = NextRoom;
+        NextRoom = string.Empty;
+
+        Debug.Log($"Loaded room {CurrentRoom}");
+        OnRoomLoaded?.Invoke(CurrentRoom);
+    }
+
+    /// <summary>
+    /// Step 0: Load the next room
+    /// </summary>
+    public void ChangeRoomInstant(string room)
+    {
+        PerformUnload(room);
+
+        SceneManager.sceneLoaded += OnOpenNextInstant;
+        SceneManager.LoadScene(room);
+    }
+
+    /// <summary>
+    /// Step 1: Finish up
+    /// </summary>
+    private void OnOpenNextInstant(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnOpenNextInstant;
+
+        PerformLoad();
+    }
+
+    /// <summary>
+    /// Step 0: Start process
+    /// </summary>
+    public void ChangeRoomWithFade(string room)
     {
         Debug.Log("Changing to room " + room);
 
@@ -54,12 +103,7 @@ public class RoomManager : BaseManager
                 break;
         }
 
-        PreviousRoom = CurrentRoom;
-        CurrentRoom = string.Empty;
-        NextRoom = room;
-
-        Debug.Log($"Unloaded room {PreviousRoom}");
-        OnRoomUnloaded?.Invoke(PreviousRoom);
+        PerformUnload(room);
 
         SceneManager.sceneLoaded += OnOpenLoading;
         SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
@@ -109,11 +153,7 @@ public class RoomManager : BaseManager
     /// </summary>
     private IEnumerator FadeInCoroutine()
     {
-        CurrentRoom = NextRoom;
-        NextRoom = string.Empty;
-
-        Debug.Log($"Loaded room {CurrentRoom}");
-        OnRoomLoaded?.Invoke(CurrentRoom);
+        PerformLoad();
 
         float startTime = Time.time;
         Debug.Log("Starting fade in");

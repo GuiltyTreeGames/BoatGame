@@ -17,7 +17,7 @@ public class Door : MonoBehaviour
     public void EnterDoor()
     {
         Core.SpawnManager.StorePlayerInfo(_targetId);
-        Core.RoomManager.ChangeRoom(_targetRoom);
+        Core.RoomManager.ChangeRoomWithFade(_targetRoom);
     }
 
     private void OnDrawGizmosSelected()
