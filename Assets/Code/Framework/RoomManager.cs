@@ -33,12 +33,8 @@ public class RoomManager : BaseManager
     public override void OnAllInitialized()
     {
         // If not starting in main menu, fake a scene load event
-        string room = SceneManager.GetActiveScene().name;
-        if (room != "MainMenu")
-        {
-            CurrentRoom = room;
-            OnRoomLoaded?.Invoke(room);
-        }
+        NextRoom = SceneManager.GetActiveScene().name;
+        PerformLoad();
     }
 
     /// <summary>

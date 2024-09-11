@@ -98,13 +98,16 @@ public class SpawnManager : BaseManager
 
     private void OnRoomLoaded(string room)
     {
+        if (room == "MainMenu")
+            return;
+
         SpawnPlayer();
         SpawnAllLivingNpcs();
     }
 
     private void OnRoomUnloaded(string room)
     {
-        SpawnedPlayer = null;
-        SpawnedNpcs = null;
+        //SpawnedNpcs = null;
+        //SpawnedPlayer = null;
     }
 }
