@@ -45,5 +45,7 @@ public static class Core
     }
 
     public static CanvasManager CanvasManager { get; private set; } = new();
+    public static InputManager InputManager { get; private set; } = new();
     public static RoomManager RoomManager { get; private set; } = new();
+    public static SpawnManager SpawnManager { get; private set; } = new();
 }
