@@ -23,14 +23,20 @@ public class PauseWidget : MonoBehaviour
 
     public void ShowPauseMenu()
     {
+        Debug.Log("Pausing game");
         Core.InputManager.AddInputBlock(PAUSE_BLOCK);
+        Time.timeScale = 0;
+
         _content.SetActive(true);
     }
 
     public void HidePauseMenu()
     {
-        _content.SetActive(false);
+        Debug.Log("Unpausing game");
         Core.InputManager.RemoveInputBlock(PAUSE_BLOCK);
+        Time.timeScale = 1;
+
+        _content.SetActive(false);
     }
 
     public void ReturnToMenu()
