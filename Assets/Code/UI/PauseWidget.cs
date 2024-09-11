@@ -42,6 +42,8 @@ public class PauseWidget : MonoBehaviour
     public void ReturnToMenu()
     {
         Debug.Log("Quitting to menu");
+        Core.RoomManager.ChangeRoomInstant("MainMenu");
+        HidePauseMenu();
     }
 
     private static readonly InputBlock PAUSE_BLOCK = new InputBlock(new InputType[]
