@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class CameraFollowPlayer : MonoBehaviour
 {
+    private Camera cam;
+
     [SerializeField]
     float _damping;
     [SerializeField]
@@ -9,7 +11,7 @@ public class CameraFollowPlayer : MonoBehaviour
     [SerializeField]
     private Vector2 _yBounds;
 
-    private Camera cam;
+    private Vector3 _lastUnsmoothPosition;
 
     public void UpdateBounds(Vector2 x, Vector2 y)
     {
@@ -21,11 +23,17 @@ public class CameraFollowPlayer : MonoBehaviour
     {
         cam = GetComponent<Camera>();
         transform.position = CalculateTargetPosition();
+        _lastUnsmoothPosition = transform.position;
     }
 
     void LateUpdate()
     {
-        transform.position = Vector3.Lerp(transform.position, CalculateTargetPosition(), _damping * Time.deltaTime);
+        Vector3 targetPosition = CalculateTargetPosition();
+        Vector3 lerpedPosition = Vector3.Lerp(_lastUnsmoothPosition, targetPosition, _damping * Time.deltaTime);
+        Vector3 smoothedPosition = SmoothPosition(lerpedPosition);
+
+        transform.position = smoothedPosition;
+        _lastUnsmoothPosition = lerpedPosition;
     }
 
     private Vector3 CalculateTargetPosition()
@@ -60,6 +68,11 @@ public class CameraFollowPlayer : MonoBehaviour
         }
 
         return targetPosition;
+    }
+
+    private Vector3 SmoothPosition(Vector3 position)
+    {
+        return new Vector3(((int)(position.x * 32)) / 32f, ((int)(position.y * 32)) / 32f, -10);
     }
 
     private void OnDrawGizmosSelected()
