@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class NpcMovement : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    private BoxCollider2D col;
+    private Rigidbody2D rigidBody;
+    private BoxCollider2D thisCollider;
 
-    private readonly List<Collider2D> _touchingColliders = new();
+    private List<Collider2D> _touchingColliders = new();
 
     [SerializeField]
     private float _moveSpeed = 1;
@@ -17,24 +17,24 @@ public class NpcMovement : MonoBehaviour
     private bool _hasRandomMovement = false;
 
     [SerializeField]
-    [Min(1f)]
-    [Tooltip("The minimum cooldown between two sessions of random movement")]
-    private float _randomMovementMinimumInterval = 2f;
+    [Tooltip("The min and max possible cooldown between two sessions of random movement")]
+    private Vector2 _randomMovementIntervalRange = new(2f, 4f);
 
     [SerializeField]
-    [Min(1f)]
-    [Tooltip("The duration of each random movement session")]
-    private float _randomMovementDuration = 2f;
+    [Tooltip("The possible range of duration of each random movement session")]
+    private Vector2 _randomMovementDurationRange = new(2f, 4f);
+
+    [SerializeField]
+    [Tooltip("The X boundary of random movement")]
+    private Vector2 _movementBoundsX;
+
+    [SerializeField]
+    [Tooltip("The Y boundary of random movement")]
+    private Vector2 _movementBoundsY;
+
+    private Vector2 _randomMovementTurnIntervalRange = new(0.5f, 1f);
 
     private bool _isRandomlyMoving = false;
-    private float _randomMovementTimer = 0f;
-
-    [Range(0f, 1f)]
-    private float _randomMovementProbability = 0.5f;
-
-    private float _changeDirectionMinimumInterval = 0.5f;
-    private float _changeDirectionTimer = 0f;
-    private float _changeDirectionProbability = 0.5f;
 
 
     /// <summary>
@@ -65,43 +65,64 @@ public class NpcMovement : MonoBehaviour
 
     void Awake()
     {
-        rb = GetComponentInChildren<Rigidbody2D>();
-        col = GetComponentInChildren<BoxCollider2D>();
-        _randomMovementTimer = 0f;
-        _isRandomlyMoving = false;
+        rigidBody = GetComponent<Rigidbody2D>();
+        thisCollider = transform.Find("Collision").GetComponentInChildren<BoxCollider2D>();
+
     }
+
 
     void FixedUpdate()
     {
-        UpdateRandomMovementStatus();
-        Vector2 direction = _isRandomlyMoving?
-            KillBlockedMovement(_randomMovementDirection)
+        if (!_isRandomlyMoving 
+            && !Core.TimeHandler.HasTimeable($"{gameObject.name}_NpcRandomMovement_WaitAndStart"))
+        {
+            Core.TimeHandler.AddTimeable(
+                $"{gameObject.name}_NpcRandomMovement_WaitAndStart",
+                new RandomTicker(_randomMovementIntervalRange, false, StartRandomMovement));
+        }
+        Vector2 direction = _isRandomlyMoving
+            ? KillBlockedMovement(_randomMovementDirection)
             : new Vector2(0, 0);
-        rb.velocity = _moveSpeed * Time.fixedDeltaTime * direction.normalized;
+        rigidBody.velocity = _moveSpeed * Time.fixedDeltaTime * direction.normalized;
     }
 
     /// <summary>
-    /// For every collider that the player is in contact with, kill movement in that direction to prevent slowing down
+    /// For every collider that the NPC is in contact with, kill movement in that direction to prevent slowing down
     /// </summary>
     private Vector2 KillBlockedMovement(Vector2 direction)
     {
+        Bounds npcBounds = this.thisCollider.bounds;
+
         foreach (Collider2D collider in _touchingColliders)
         {
-            Bounds playerBounds = col.bounds;
             Bounds colBounds = collider.bounds;
 
-            if (direction.x > 0 && colBounds.min.x >= playerBounds.max.x ||
-                direction.x < 0 && colBounds.max.x <= playerBounds.min.x)
+            if (direction.x > 0 && colBounds.min.x >= npcBounds.max.x ||
+                direction.x < 0 && colBounds.max.x <= npcBounds.min.x)
             {
                 direction.x = 0;
-                Debug.Log("Killing horizontal movement");
+                Debug.Log($"Killing horizontal movement of {gameObject}");
             }
-            if (direction.y > 0 && colBounds.min.y >= playerBounds.max.y ||
-                direction.y < 0 && colBounds.max.y <= playerBounds.min.y)
+            if (direction.y > 0 && colBounds.min.y >= npcBounds.max.y ||
+                direction.y < 0 && colBounds.max.y <= npcBounds.min.y)
             {
                 direction.y = 0;
-                Debug.Log("Killing vertical movement");
+                Debug.Log($"Killing vertical movement of {gameObject}");
             }
+        }
+
+        // kill movement if the NPC is about to approach its movementBounds
+        if (direction.x > 0 && _movementBoundsX.y <= npcBounds.max.x ||
+            direction.x < 0 && _movementBoundsX.x >= npcBounds.min.x)
+        {
+            direction.x = 0;
+            Debug.Log($"Killing horizontal movement of {gameObject} when touching Npc Movement Bounds");
+        }
+        if (direction.y > 0 && _movementBoundsY.y <= npcBounds.max.y ||
+            direction.y < 0 && _movementBoundsY.x >= npcBounds.min.y)
+        {
+            direction.y = 0;
+            Debug.Log($"Killing vertical movement of {gameObject} when touching Npc Movement Bounds");
         }
 
         return direction;
@@ -109,52 +130,55 @@ public class NpcMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Entering collider: " + collision.gameObject.name);
-        _touchingColliders.Add(collision.collider);
+        Debug.Log($"{gameObject.name} entering collider: {collision.gameObject.name}");
+
+        if (collision.gameObject.name == "MovementBounds"
+            && collision.gameObject.transform.parent.gameObject.name == this.gameObject.name)
+        {
+            return;
+        }
+        else
+        {
+            _touchingColliders.Add(collision.collider);
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Debug.Log("Exiting collider: " + collision.gameObject.name);
-        _touchingColliders.Remove(collision.collider);
+        Debug.Log($"{gameObject.name} exiting collider: {collision.gameObject.name}");
+
+        if (collision.gameObject.name == "MovementBounds"
+            && collision.gameObject.transform.parent.gameObject.name == this.gameObject.name)
+        {
+            return;
+        }
+        else
+        {
+            _touchingColliders.Remove(collision.collider);
+        }
     }
 
-    private void UpdateRandomMovementStatus()
-    {
-        _randomMovementTimer += Time.fixedDeltaTime;
 
-        if (!_isRandomlyMoving)
-        {
-            if (_randomMovementTimer > _randomMovementMinimumInterval)
-            {
-                if (UnityEngine.Random.value < _randomMovementProbability)
-                {
-                    // start random movement
-                    _isRandomlyMoving = true;
-                    _randomMovementDirection = RandomMovementDirection;
-                    _randomMovementTimer = 0;
-                }
-            }
-        }
-        else if (_isRandomlyMoving)
-        {
-            _changeDirectionTimer += Time.fixedDeltaTime;
-            if (_randomMovementTimer > _randomMovementDuration)
-            {
-                // stop random movement
-                _isRandomlyMoving = false;
-                _randomMovementTimer = 0;
-                _changeDirectionTimer = 0;
-            }
-            if (_changeDirectionTimer > _changeDirectionMinimumInterval)
-            {
-                if (UnityEngine.Random.value < _changeDirectionProbability)
-                {
-                    // change movement direction
-                    _randomMovementDirection = RandomMovementDirection;
-                    _changeDirectionTimer = 0;
-                }
-            }
-        }
+    private void StartRandomMovement()
+    {
+        _isRandomlyMoving = true;
+        Core.TimeHandler.AddTimeable(
+            $"{gameObject.name}_NpcRandomMovement_WaitAndTurn",
+            new RandomTicker(_randomMovementTurnIntervalRange, false, ChangeRandomMovementDirection));
+        Core.TimeHandler.AddTimeable(
+            $"{gameObject.name}_NpcRandomMovement_WaitAndEnd",
+            new RandomCountdown(_randomMovementDurationRange, StopRandomMovement));
+        ChangeRandomMovementDirection();
+    }
+
+    private void StopRandomMovement()
+    {
+        _isRandomlyMoving = false;
+        Core.TimeHandler.RemoveTimeable($"{gameObject.name}_NpcRandomMovement_WaitAndTurn");
+    }
+
+    private void ChangeRandomMovementDirection()
+    {
+        _randomMovementDirection = RandomMovementDirection;
     }
 }

@@ -1,14 +1,16 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class SpawnManager : BaseManager
 {
-    private GameObject _playerPrefab;
-
     private string _nextSpawnId;
-    private Vector2 _storedPosition;
+    private Vector2 _storedPlayerPosition;
 
+
+    private GameObject _playerPrefab;
     public GameObject SpawnedPlayer { get; private set; }
+    public Dictionary<string, GameObject> SpawnedNpcs { get; private set; } = new();
 
     public override void OnInitialize()
     {
@@ -27,7 +29,7 @@ public class SpawnManager : BaseManager
     public void StorePlayerInfo(string targetId)
     {
         _nextSpawnId = targetId;
-        _storedPosition = SpawnedPlayer.transform.position;
+        _storedPlayerPosition = SpawnedPlayer.transform.position;
         // Store orientation
     }
 
@@ -36,7 +38,7 @@ public class SpawnManager : BaseManager
         SpawnInfo spawn = GetSpawnDoorInfo(_nextSpawnId);
 
         SpawnedPlayer = Object.Instantiate(_playerPrefab);
-        SpawnedPlayer.transform.position = GetSpawnPosition(spawn, _storedPosition);
+        SpawnedPlayer.transform.position = GetSpawnPosition(spawn, _storedPlayerPosition);
         // Set orientation
     }
 
@@ -75,13 +77,34 @@ public class SpawnManager : BaseManager
         return storedPosition;
     }
 
+    private void SpawnNpc(string name)
+    {
+        GameObject npc = Core.NpcManager.npcPrefabs[name];
+        NpcInfo npcInfo = npc.GetComponent<NpcInfo>();
+
+        SpawnInfo spawn = npcInfo.spawnInfo;
+        SpawnedNpcs.Add(name, Object.Instantiate(npc));
+        SpawnedNpcs[name].transform.position = new Vector3(spawn.customPositionX, spawn.customPositionY, 0);
+        // Set orientation
+    }
+
+    private void SpawnAllLivingNpcs()
+    {
+        foreach (GameObject npc in Core.NpcManager.npcPrefabs.Values.Where(x => x.GetComponent<NpcInfo>().isDead == false))
+        {
+            SpawnNpc(npc.name);
+        }
+    }
+
     private void OnRoomLoaded(string room)
     {
         SpawnPlayer();
+        SpawnAllLivingNpcs();
     }
 
     private void OnRoomUnloaded(string room)
     {
         SpawnedPlayer = null;
+        SpawnedNpcs = null;
     }
 }

@@ -10,6 +10,20 @@ public class RoomManager : BaseManager
     public string CurrentRoom { get; private set; } = string.Empty;
     public string NextRoom { get; private set; } = string.Empty;
 
+    public bool AnySceneLoaded => CurrentRoom != string.Empty;
+
+    public bool MenuSceneLoaded => CurrentRoom == "MainMenu";
+
+    public bool GameSceneLoaded
+    {
+        get
+        {
+            if (!AnySceneLoaded)
+                return false;
+            return !MenuSceneLoaded;
+        }
+    }
+
     public override void OnInitialize()
     {
         tempObject = new GameObject("Temp").AddComponent<DoorEnterOnTrigger>();

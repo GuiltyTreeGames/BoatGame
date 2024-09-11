@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class Core
@@ -21,7 +22,14 @@ public static class Core
             manager.OnInitialize();
         foreach (var manager in _managers)
             manager.OnAllInitialized();
-        Debug.Log("Initialized all core managers");
+        Debug.Log("Completed initialization of all core managers");
+
+        Debug.Log("Initialize time handler");
+        GameObject timeHandlerObject = new("Time Handler");
+        timeHandlerObject.AddComponent<TimeHandler>();
+        Core.TimeHandler = timeHandlerObject.GetComponent<TimeHandler>();
+        UnityEngine.Object.DontDestroyOnLoad(timeHandlerObject);
+        Debug.Log("Completed Initialization of time handler");
 
         _initialized = true;
     }
@@ -48,4 +56,9 @@ public static class Core
     public static InputManager InputManager { get; private set; } = new();
     public static RoomManager RoomManager { get; private set; } = new();
     public static SpawnManager SpawnManager { get; private set; } = new();
+
+    public static NpcManager NpcManager { get; private set; } = new();
+
+    public static TimeHandler TimeHandler { get; private set; }
+    
 }

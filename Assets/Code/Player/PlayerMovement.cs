@@ -40,13 +40,13 @@ public class PlayerMovement : MonoBehaviour
                 direction.x < 0 && colBounds.max.x <= playerBounds.min.x)
             {
                 direction.x = 0;
-                Debug.Log("Killing horizontal movement");
+                Debug.Log($"Killing horizontal movement of {gameObject}");
             }
             if (direction.y > 0 && colBounds.min.y >= playerBounds.max.y ||
                 direction.y < 0 && colBounds.max.y <= playerBounds.min.y)
             {
                 direction.y = 0;
-                Debug.Log("Killing vertical movement");
+                Debug.Log($"Killing vertical movement of {gameObject}");
             }
         }
 
@@ -55,13 +55,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Entering collider: " + collision.gameObject.name);
+        Debug.Log($"{gameObject.name} entering collider: {collision.gameObject.name}");
         _touchingColliders.Add(collision.collider);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Debug.Log("Exiting collider: " + collision.gameObject.name);
+        Debug.Log($"{gameObject.name} exiting collider: {collision.gameObject.name}");
         _touchingColliders.Remove(collision.collider);
     }
 }
