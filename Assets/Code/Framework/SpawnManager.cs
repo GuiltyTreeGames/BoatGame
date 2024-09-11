@@ -77,11 +77,14 @@ public class SpawnManager : BaseManager
 
     private void OnRoomLoaded(string room)
     {
+        if (room == "MainMenu")
+            return;
+
         SpawnPlayer();
     }
 
     private void OnRoomUnloaded(string room)
     {
-        SpawnedPlayer = null;
+        //SpawnedPlayer = null;
     }
 }
