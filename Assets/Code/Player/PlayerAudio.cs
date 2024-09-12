@@ -33,7 +33,7 @@ public class PlayerAudio : MonoBehaviour
         }
 
         // If not on a floor, reset everything
-        if (Physics2D.OverlapCircleNonAlloc(transform.position, 0.2f, _floorColliders, _floorLayer) == 0)
+        if (Physics2D.OverlapCircleNonAlloc(transform.position, 0.1f, _floorColliders, _floorLayer) == 0)
         {
             _currentFloor = null;
             _currentIndex = 0;
