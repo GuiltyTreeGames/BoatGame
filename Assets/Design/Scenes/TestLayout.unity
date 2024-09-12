@@ -1438,6 +1438,7 @@ GameObject:
   - component: {fileID: 678065718}
   - component: {fileID: 678065717}
   - component: {fileID: 678065716}
+  - component: {fileID: 678065721}
   m_Layer: 7
   m_Name: Floor
   m_TagString: Untagged
@@ -4307,6 +4308,23 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &678065721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678065714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07dfadc4274078f449e3addfcd0cc542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _footstepSounds:
+  - {fileID: 8300000, guid: df8e8bc293064664f9bd031732d5492c, type: 3}
+  - {fileID: 8300000, guid: 4731db95ba402784184ad0d8227d771b, type: 3}
+  - {fileID: 8300000, guid: 39bbaf991b808fb44b36affd48a312b5, type: 3}
+  _speedPercent: 1
 --- !u!1 &716339115
 GameObject:
   m_ObjectHideFlags: 0

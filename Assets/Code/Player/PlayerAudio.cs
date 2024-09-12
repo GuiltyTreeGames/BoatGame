@@ -6,12 +6,11 @@ public class PlayerAudio : MonoBehaviour
     private readonly Collider2D[] _floorColliders = new Collider2D[1];
 
     [SerializeField]
-    private AudioClip[] _footstepSounds;
-    [SerializeField]
     private float _secondsBetweenPlay;
     [SerializeField]
     private LayerMask _floorLayer;
 
+    private FloorInfo _currentFloor;
     private int _currentIndex = 0;
     private float _currentPlayTimer = 0;
 
@@ -33,10 +32,23 @@ public class PlayerAudio : MonoBehaviour
             return;
         }
 
-        // Check the current floor type
-        if (Physics2D.OverlapCircleNonAlloc(transform.position, 0.2f, _floorColliders, _floorLayer) > 0)
+        // If not on a floor, reset everything
+        if (Physics2D.OverlapCircleNonAlloc(transform.position, 0.2f, _floorColliders, _floorLayer) == 0)
         {
-            Debug.Log("Walking on " + _floorColliders[0].gameObject.name);
+            _currentFloor = null;
+            _currentIndex = 0;
+            _currentPlayTimer = 0;
+            return;
+        }
+
+        // If on a different floor, update info
+        if (_floorColliders[0].gameObject != _currentFloor?.gameObject)
+        {
+            Debug.Log($"Changing floor to {_floorColliders[0].gameObject.name}");
+            _currentFloor = _floorColliders[0].GetComponent<FloorInfo>();
+            _currentIndex = 0;
+            _currentPlayTimer = 0;
+            return;
         }
 
         // Increase timer
@@ -45,11 +57,11 @@ public class PlayerAudio : MonoBehaviour
         // If reached the end of the timer, change index and play sfx
         if (_currentPlayTimer >= _secondsBetweenPlay)
         {
-            source.clip = _footstepSounds[_currentIndex];
+            source.clip = _currentFloor.FootstepSounds[_currentIndex];
             source.Play();
 
             _currentPlayTimer = 0;
-            if (++_currentIndex >= _footstepSounds.Length)
+            if (++_currentIndex >= _currentFloor.FootstepSounds.Length)
                 _currentIndex = 0;
         }
     }
