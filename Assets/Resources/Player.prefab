@@ -146,6 +146,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4731db95ba402784184ad0d8227d771b, type: 3}
   - {fileID: 8300000, guid: 39bbaf991b808fb44b36affd48a312b5, type: 3}
   _secondsBetweenPlay: 0.3
+  _floorLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &1672260133702725031
 GameObject:
   m_ObjectHideFlags: 0
