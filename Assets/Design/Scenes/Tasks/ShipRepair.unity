@@ -208,6 +208,7 @@ GameObject:
   - component: {fileID: 154043358}
   - component: {fileID: 154043360}
   - component: {fileID: 154043359}
+  - component: {fileID: 154043361}
   m_Layer: 5
   m_Name: Plank (2)
   m_TagString: Untagged
@@ -272,6 +273,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154043357}
   m_CullTransparentMesh: 1
+--- !u!114 &154043361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154043357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e90aa0102086454fb84aabf84e2edce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dropSpeed: 300
 --- !u!1 &524568471
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,6 +512,7 @@ GameObject:
   - component: {fileID: 1219025870}
   - component: {fileID: 1219025872}
   - component: {fileID: 1219025871}
+  - component: {fileID: 1219025873}
   m_Layer: 5
   m_Name: Plank (1)
   m_TagString: Untagged
@@ -521,7 +536,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -39.000023, y: 10}
+  m_AnchoredPosition: {x: -39.000023, y: 124}
   m_SizeDelta: {x: 300, y: 80}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1219025871
@@ -562,6 +577,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1219025869}
   m_CullTransparentMesh: 1
+--- !u!114 &1219025873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1219025869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e90aa0102086454fb84aabf84e2edce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dropSpeed: 300
 --- !u!1 &1321931652
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,6 +601,7 @@ GameObject:
   - component: {fileID: 1321931653}
   - component: {fileID: 1321931655}
   - component: {fileID: 1321931654}
+  - component: {fileID: 1321931656}
   m_Layer: 5
   m_Name: Plank
   m_TagString: Untagged
@@ -596,7 +625,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -502, y: 10}
+  m_AnchoredPosition: {x: -502, y: 465}
   m_SizeDelta: {x: 300, y: 80}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1321931654
@@ -637,6 +666,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1321931652}
   m_CullTransparentMesh: 1
+--- !u!114 &1321931656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321931652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e90aa0102086454fb84aabf84e2edce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dropSpeed: 300
 --- !u!1 &1458218156
 GameObject:
   m_ObjectHideFlags: 0
