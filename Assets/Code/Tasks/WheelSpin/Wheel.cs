@@ -37,22 +37,28 @@ public class Wheel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
 
     private void HandleRotation(Vector2 currentPosition)
     {
-        Vector2 centerToLast = _lastPosition - (Vector2)transform.position;
-
-        Debug.LogWarning($"Sqr distance from center: {centerToLast.sqrMagnitude}");
+        //Vector2 centerToLast = _lastPosition - (Vector2)transform.position;
 
         Vector3 a = transform.position - (Vector3)_lastPosition;
         Vector3 b = new Vector3(a.x, a.y, -1);
 
         float speedPercent = Mathf.Clamp(a.sqrMagnitude, 0, _maxDistance) / _maxDistance;
-        Debug.LogWarning($"Speed percent: {speedPercent}");
+        //Debug.LogWarning($"Speed percent: {speedPercent}");
 
-        Vector3 side = Vector3.Cross(a, b);
-        side = side.normalized * 100 * speedPercent;
+        Vector3 cross = Vector3.Cross(a, b);
+        cross = 100 * speedPercent * cross.normalized;
+
+        Vector3 l = (currentPosition - _lastPosition).normalized;
+        Vector3 r = cross;
+
+        float dot = Vector3.Dot(l, r);
+        Debug.LogWarning("Dot: " + dot);
+
+        transform.Rotate(new Vector3(0, 0, -dot / 50));
 
         DEBUG_P1 = transform.position;
         DEBUG_P2 = _lastPosition;
-        DEBUG_P3 = _lastPosition + (Vector2)side;
+        DEBUG_P3 = _lastPosition + (Vector2)cross;
     }
 
     private void OnDrawGizmos()
