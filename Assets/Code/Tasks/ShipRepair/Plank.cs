@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Plank : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     private RectTransform rect;
+    private Image image;
 
     [SerializeField]
     private float _dropSpeed = 1;
@@ -13,14 +13,17 @@ public class Plank : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     private bool _isDragging = false;
     private Vector2 _dragOffset;
 
+    private bool _isPatched = false;
+
     void Start()
     {
         rect = GetComponent<RectTransform>();
+        image = GetComponent<Image>();
     }
 
     void Update()
     {
-        if (_isDragging)
+        if (_isDragging || _isPatched)
             return;
 
         // If floating, apply gravity
@@ -36,9 +39,16 @@ public class Plank : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         }
     }
 
+    public void Patch()
+    {
+        _isPatched = true;
+        _isDragging = false;
+    }
+
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log(eventData.position);
+        if (!_isDragging)
+            return;
 
         float x = Mathf.Clamp(eventData.position.x, MIN_POSITION, Screen.width - MIN_POSITION);
         float y = Mathf.Clamp(eventData.position.y, MIN_POSITION, Screen.height - MIN_POSITION);
@@ -48,13 +58,19 @@ public class Plank : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (_isPatched)
+            return;
+
         _isDragging = true;
+        image.raycastTarget = false;
+
         _dragOffset = (Vector2)transform.position - eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         _isDragging = false;
+        image.raycastTarget = true;
     }
 
     private const float MIN_POSITION = 10f;
