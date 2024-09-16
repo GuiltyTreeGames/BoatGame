@@ -1,21 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class Wheel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    [SerializeField]
-    private CircleCollider2D col;
-
     private Vector2 _lastPosition;
     private bool _lastDragging = false;
     private float _maxDistance;
 
     void Awake()
     {
-        _maxDistance = Mathf.Pow(GetComponent<CircleCollider2D>().radius / 2, 2);
+        _maxDistance = GetComponent<CircleCollider2D>().radius / 2;
         Debug.Log("Max distance: " + _maxDistance);
     }
 
@@ -37,28 +31,23 @@ public class Wheel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
 
     private void HandleRotation(Vector2 currentPosition)
     {
-        //Vector2 centerToLast = _lastPosition - (Vector2)transform.position;
-
         Vector3 a = transform.position - (Vector3)_lastPosition;
         Vector3 b = new Vector3(a.x, a.y, -1);
 
-        float speedPercent = Mathf.Clamp(a.sqrMagnitude, 0, _maxDistance) / _maxDistance;
-        //Debug.LogWarning($"Speed percent: {speedPercent}");
+        float speedPercent = Mathf.Clamp(a.magnitude, 0, _maxDistance) / _maxDistance;
 
-        Vector3 cross = Vector3.Cross(a, b);
-        cross = 100 * speedPercent * cross.normalized;
+        Vector3 cross = Vector3.Cross(a, b).normalized * speedPercent;
 
         Vector3 l = (currentPosition - _lastPosition).normalized;
         Vector3 r = cross;
 
-        float dot = Vector3.Dot(l, r);
-        Debug.LogWarning("Dot: " + dot);
+        float dot = -Vector3.Dot(l, r);
 
-        transform.Rotate(new Vector3(0, 0, -dot / 50));
+        transform.Rotate(new Vector3(0, 0, dot));
 
         DEBUG_P1 = transform.position;
         DEBUG_P2 = _lastPosition;
-        DEBUG_P3 = _lastPosition + (Vector2)cross;
+        DEBUG_P3 = _lastPosition + (Vector2)cross * 100;
     }
 
     private void OnDrawGizmos()
