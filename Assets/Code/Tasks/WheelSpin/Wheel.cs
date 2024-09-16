@@ -3,6 +3,9 @@ using UnityEngine.EventSystems;
 
 public class Wheel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
+    [SerializeField]
+    private float _maxAngle = 120;
+
     private Vector2 _lastPosition;
     private bool _lastDragging = false;
     private float _maxDistance;
@@ -43,7 +46,12 @@ public class Wheel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
 
         float dot = -Vector3.Dot(l, r);
 
-        transform.Rotate(new Vector3(0, 0, dot));
+        float angle = transform.localEulerAngles.z;
+        if (dot > 0 && (angle >= 180 || angle < _maxAngle) ||
+            dot < 0 && (angle <= 180 || angle > 360 - _maxAngle))
+        {
+            transform.Rotate(new Vector3(0, 0, dot));
+        }
 
         DEBUG_P1 = transform.position;
         DEBUG_P2 = _lastPosition;
