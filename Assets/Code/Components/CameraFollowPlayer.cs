@@ -38,7 +38,7 @@ public class CameraFollowPlayer : MonoBehaviour
 
     private Vector3 CalculateTargetPosition()
     {
-        Vector3 targetPosition = Core.SpawnManager.SpawnedPlayer.transform.position;
+        Vector3 targetPosition = Core.SpawnManager.PlayerObject.transform.position;
         targetPosition.z = -10;
 
         // x bounds

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,13 +13,28 @@ public class NewRoomManager : BaseManager
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 
+    private void OnLoadMainMenu(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnLoadMainMenu;
+
+        OnMainMenuLoaded?.Invoke();
+    }
+
     public void LoadGameplay(string room)
     {
         Debug.Log($"Loading gameplay ({room})");
         CurrentRoom = room;
 
         SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
+        SceneManager.sceneLoaded += OnLoadGameplay;
         LoadAllScenes(room);
+    }
+
+    private void OnLoadGameplay(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnLoadGameplay;
+
+        OnGameplayLoaded?.Invoke();
     }
 
     public void ChangeRoom(string room)
@@ -49,4 +62,12 @@ public class NewRoomManager : BaseManager
 
     private string GetLayoutPath(string room) => $"Design/Scenes/Ship/{room}/LAYOUT";
     private string GetLogicPath(string room) => $"Design/Scenes/Ship/{room}/LOGIC";
+
+    public delegate void LoadDelegate();
+    public event LoadDelegate OnGameplayLoaded;
+    public event LoadDelegate OnMainMenuLoaded;
+
+    public delegate void RoomDelegate(string room);
+    public event RoomDelegate OnRoomLoaded;
+    public event RoomDelegate OnRoomUnloaded;
 }
