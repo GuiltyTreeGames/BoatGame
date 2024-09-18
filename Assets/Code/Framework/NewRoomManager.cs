@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -5,9 +6,31 @@ public class NewRoomManager : BaseManager
 {
     public string CurrentRoom { get; private set; } = string.Empty;
 
+    public override void OnAllInitialized()
+    {
+        Debug.Log($"Starting in {SceneManager.GetActiveScene().path}");
+
+        Scene startingScene = SceneManager.GetActiveScene();
+        if (startingScene.name == "MainMenu")
+        {
+            // Call LoadMainMenu event
+            OnLoadMainMenu();
+        }
+        else if (startingScene.name == "Gameplay")
+        {
+            // Call LoadGameplay event
+            OnLoadGameplay();
+        }
+        else if (startingScene.path.Contains(GAMEPLAY_SCENE_PATH))
+        {
+            // Load the room currently active
+            string room = Path.GetFileName(Path.GetDirectoryName(startingScene.path));
+            LoadGameplay(room);
+        }
+    }
+
     public void LoadMainMenu()
     {
-        Debug.Log($"Loading main menu");
         CurrentRoom = string.Empty;
 
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
@@ -15,14 +38,21 @@ public class NewRoomManager : BaseManager
 
     private void OnLoadMainMenu(Scene scene, LoadSceneMode mode)
     {
-        SceneManager.sceneLoaded -= OnLoadMainMenu;
+        if (scene.name != "MainMenu")
+            return;
 
+        SceneManager.sceneLoaded -= OnLoadMainMenu;
+        OnLoadMainMenu();
+    }
+
+    private void OnLoadMainMenu()
+    {
+        Debug.Log($"Loaded main menu");
         OnMainMenuLoaded?.Invoke();
     }
 
     public void LoadGameplay(string room)
     {
-        Debug.Log($"Loading gameplay ({room})");
         CurrentRoom = room;
 
         SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
@@ -32,8 +62,16 @@ public class NewRoomManager : BaseManager
 
     private void OnLoadGameplay(Scene scene, LoadSceneMode mode)
     {
-        SceneManager.sceneLoaded -= OnLoadGameplay;
+        if (scene.name != "Gameplay")
+            return;
 
+        SceneManager.sceneLoaded -= OnLoadGameplay;
+        OnLoadGameplay();
+    }
+
+    private void OnLoadGameplay()
+    {
+        Debug.Log($"Loaded gameplay ({CurrentRoom})");
         OnGameplayLoaded?.Invoke();
     }
 
@@ -44,8 +82,8 @@ public class NewRoomManager : BaseManager
 
         Debug.Log($"Changing room to {room}");
         UnloadAllScenes(CurrentRoom);
+        LoadAllScenes(room);
         CurrentRoom = room;
-        LoadAllScenes(CurrentRoom);
     }
 
     private void LoadAllScenes(string room)
@@ -56,12 +94,13 @@ public class NewRoomManager : BaseManager
 
     private void UnloadAllScenes(string room)
     {
-        SceneManager.UnloadSceneAsync(GetLayoutPath(CurrentRoom));
-        SceneManager.UnloadSceneAsync(GetLogicPath(CurrentRoom));
+        SceneManager.UnloadSceneAsync(GetLayoutPath(room));
+        SceneManager.UnloadSceneAsync(GetLogicPath(room));
     }
 
-    private string GetLayoutPath(string room) => $"Design/Scenes/Ship/{room}/LAYOUT";
-    private string GetLogicPath(string room) => $"Design/Scenes/Ship/{room}/LOGIC";
+    private const string GAMEPLAY_SCENE_PATH = "Design/Scenes/Ship";
+    private string GetLayoutPath(string room) => $"{GAMEPLAY_SCENE_PATH}/{room}/LAYOUT";
+    private string GetLogicPath(string room) => $"{GAMEPLAY_SCENE_PATH}/{room}/LOGIC";
 
     public delegate void LoadDelegate();
     public event LoadDelegate OnGameplayLoaded;

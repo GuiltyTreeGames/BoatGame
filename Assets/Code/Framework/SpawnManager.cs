@@ -21,6 +21,7 @@ public class SpawnManager : BaseManager
 
     private void OnGameplayLoaded()
     {
+        Debug.Log("Caching player object");
         PlayerObject = GameObject.FindGameObjectWithTag("Player");
     }
 
