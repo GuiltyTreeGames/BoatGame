@@ -13,21 +13,21 @@ public class NewRoomManager : BaseManager
         Scene startingScene = SceneManager.GetActiveScene();
         if (startingScene.name == "MainMenu")
         {
-            // Call LoadMainMenu event
-            OnLoadMainMenu();
+            SendMainMenuLoadedEvent();
         }
         else if (startingScene.name == "Gameplay")
         {
-            // Call LoadGameplay event
-            OnLoadGameplay();
+            SendGameplayLoadedEvent();
         }
         else if (startingScene.path.Contains(GAMEPLAY_SCENE_PATH))
         {
-            // Load the room currently active
+            // When pressing play from a room scene
             string room = Path.GetFileName(Path.GetDirectoryName(startingScene.path));
             LoadGameplay(room);
         }
     }
+
+    // Loading menu
 
     public void LoadMainMenu()
     {
@@ -42,14 +42,10 @@ public class NewRoomManager : BaseManager
             return;
 
         SceneManager.sceneLoaded -= OnLoadMainMenu;
-        OnLoadMainMenu();
+        SendMainMenuLoadedEvent();
     }
 
-    private void OnLoadMainMenu()
-    {
-        Debug.Log($"Loaded main menu");
-        OnMainMenuLoaded?.Invoke();
-    }
+    // Loading gameplay
 
     public void LoadGameplay(string room)
     {
@@ -66,14 +62,10 @@ public class NewRoomManager : BaseManager
             return;
 
         SceneManager.sceneLoaded -= OnLoadGameplay;
-        OnLoadGameplay();
+        SendGameplayLoadedEvent();
     }
 
-    private void OnLoadGameplay()
-    {
-        Debug.Log($"Loaded gameplay ({CurrentRoom})");
-        OnGameplayLoaded?.Invoke();
-    }
+    // Changing rooms
 
     public void ChangeRoom(string room)
     {
@@ -96,6 +88,32 @@ public class NewRoomManager : BaseManager
     {
         SceneManager.UnloadSceneAsync(GetLayoutPath(room));
         SceneManager.UnloadSceneAsync(GetLogicPath(room));
+    }
+
+    // Events
+
+    private void SendMainMenuLoadedEvent()
+    {
+        Debug.Log($"Loaded main menu");
+        OnMainMenuLoaded?.Invoke();
+    }
+
+    private void SendGameplayLoadedEvent()
+    {
+        Debug.Log($"Loaded gameplay");
+        OnGameplayLoaded?.Invoke();
+    }
+
+    private void SendRoomLoadedEvent(string room)
+    {
+        Debug.Log($"Loaded room {room}");
+        OnRoomLoaded?.Invoke(room);
+    }
+
+    private void SendRoomUnloadedEvent(string room)
+    {
+        Debug.Log($"Unloaded room {room}");
+        OnRoomUnloaded?.Invoke(room);
     }
 
     private const string GAMEPLAY_SCENE_PATH = "Design/Scenes/Ship";
