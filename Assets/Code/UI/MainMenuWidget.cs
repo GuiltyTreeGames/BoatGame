@@ -15,7 +15,7 @@ public class MainMenuWidget : MonoBehaviour
     public void StartGame()
     {
         Debug.Log("Starting game");
-        Core.RoomManager.ChangeRoomInstant(_firstScene);
+        Core.NewRoomManager.LoadGameplay(_firstScene);
         SetMenuStatus(false);
     }
 
