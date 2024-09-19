@@ -34,9 +34,9 @@ public class NewRoomManager : BaseManager
 
     public void LoadMainMenu()
     {
-        CurrentRoom = string.Empty;
-
+        UnloadAllScenes(CurrentRoom);
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+        SceneManager.sceneLoaded += OnLoadMainMenu;
     }
 
     private void OnLoadMainMenu(Scene scene, LoadSceneMode mode)
@@ -52,8 +52,6 @@ public class NewRoomManager : BaseManager
 
     public void LoadGameplay(string room)
     {
-        CurrentRoom = room;
-
         SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
         SceneManager.sceneLoaded += OnLoadGameplay;
         LoadAllScenes(room);
@@ -78,7 +76,6 @@ public class NewRoomManager : BaseManager
         Debug.Log($"Changing room to {room}");
         UnloadAllScenes(CurrentRoom);
         LoadAllScenes(room);
-        CurrentRoom = room;
     }
 
     private void LoadAllScenes(string room)
@@ -122,12 +119,14 @@ public class NewRoomManager : BaseManager
     private void SendRoomLoadedEvent(string room)
     {
         Debug.Log($"Loaded room {room}");
+        CurrentRoom = room;
         OnRoomLoaded?.Invoke(room);
     }
 
     private void SendRoomUnloadedEvent(string room)
     {
         Debug.Log($"Unloaded room {room}");
+        CurrentRoom = string.Empty;
         OnRoomUnloaded?.Invoke(room);
     }
 
