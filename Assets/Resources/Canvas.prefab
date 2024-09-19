@@ -1032,7 +1032,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17d9d60440e479d44838e7e32846e4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _firstScene: Test
+  _firstScene: Deck
   _content: {fileID: 5176585296412072781}
 --- !u!1 &4692628617820289513
 GameObject:

@@ -16,7 +16,7 @@ public class HideBackgroundSprite : MonoBehaviour
 
     void Update()
     {
-        float yDiff = Core.SpawnManager.SpawnedPlayer.transform.position.y - (transform.position.y + _switchHeight);
+        float yDiff = Core.SpawnManager.PlayerObject.transform.position.y - (transform.position.y + _switchHeight);
 
         foreach (var renderer in renderers)
         {

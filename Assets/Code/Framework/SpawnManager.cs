@@ -8,26 +8,33 @@ public class SpawnManager : BaseManager
     private string _nextSpawnId;
     private Vector2 _storedPosition;
 
-    public GameObject SpawnedPlayer { get; private set; }
+    public GameObject PlayerObject { get; private set; }
 
     public override void OnInitialize()
     {
         _playerPrefab = Resources.Load<GameObject>("Player");
 
-        Core.RoomManager.OnRoomLoaded += OnRoomLoaded;
-        Core.RoomManager.OnRoomUnloaded += OnRoomUnloaded;
+        Core.NewRoomManager.OnGameplayLoaded += OnGameplayLoaded;
+        //Core.RoomManager.OnRoomLoaded += OnRoomLoaded;
+        //Core.RoomManager.OnRoomUnloaded += OnRoomUnloaded;
+    }
+
+    private void OnGameplayLoaded()
+    {
+        Debug.Log("Caching player object");
+        PlayerObject = GameObject.FindGameObjectWithTag("Player");
     }
 
     public override void OnDispose()
     {
-        Core.RoomManager.OnRoomLoaded -= OnRoomLoaded;
-        Core.RoomManager.OnRoomUnloaded -= OnRoomUnloaded;
+        //Core.RoomManager.OnRoomLoaded -= OnRoomLoaded;
+        //Core.RoomManager.OnRoomUnloaded -= OnRoomUnloaded;
     }
 
     public void StorePlayerInfo(string targetId)
     {
         _nextSpawnId = targetId;
-        _storedPosition = SpawnedPlayer.transform.position;
+        _storedPosition = PlayerObject.transform.position;
         // Store orientation
     }
 
@@ -35,8 +42,8 @@ public class SpawnManager : BaseManager
     {
         SpawnInfo spawn = GetSpawnDoorInfo(_nextSpawnId);
 
-        SpawnedPlayer = Object.Instantiate(_playerPrefab);
-        SpawnedPlayer.transform.position = GetSpawnPosition(spawn, _storedPosition);
+        PlayerObject = Object.Instantiate(_playerPrefab);
+        PlayerObject.transform.position = GetSpawnPosition(spawn, _storedPosition);
         // Set orientation
     }
 
