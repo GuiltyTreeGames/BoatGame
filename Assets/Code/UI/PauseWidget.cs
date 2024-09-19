@@ -42,7 +42,7 @@ public class PauseWidget : MonoBehaviour
     public void ReturnToMenu()
     {
         Debug.Log("Quitting to menu");
-        Core.RoomManager.ChangeRoomInstant("MainMenu");
+        Core.NewRoomManager.LoadMainMenu();
         HidePauseMenu();
     }
 

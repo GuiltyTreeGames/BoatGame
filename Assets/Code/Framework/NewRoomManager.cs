@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -5,8 +6,14 @@ using UnityEngine.SceneManagement;
 public class NewRoomManager : BaseManager
 {
     public string CurrentRoom { get; private set; } = string.Empty;
+    private string _nextRoom = string.Empty;
 
+    private string _loadRoom = string.Empty;
+    private Action<string> _loadCallback = null;
     private int _loadCounter;
+
+    private string _unloadRoom = string.Empty;
+    private Action<string> _unloadCallback = null;
     private int _unloadCounter;
 
     public override void OnAllInitialized()
@@ -34,7 +41,11 @@ public class NewRoomManager : BaseManager
 
     public void LoadMainMenu()
     {
-        UnloadAllScenes(CurrentRoom);
+        UnloadAllScenes(CurrentRoom, UnloadRoomBeforeMainMenu);
+    }
+
+    private void UnloadRoomBeforeMainMenu(string room)
+    {
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
         SceneManager.sceneLoaded += OnLoadMainMenu;
     }
@@ -52,9 +63,9 @@ public class NewRoomManager : BaseManager
 
     public void LoadGameplay(string room)
     {
+        _nextRoom = room;
         SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
         SceneManager.sceneLoaded += OnLoadGameplay;
-        LoadAllScenes(room);
     }
 
     private void OnLoadGameplay(Scene scene, LoadSceneMode mode)
@@ -64,6 +75,7 @@ public class NewRoomManager : BaseManager
 
         SceneManager.sceneLoaded -= OnLoadGameplay;
         SendGameplayLoadedEvent();
+        LoadAllScenes(_nextRoom);
     }
 
     // Changing rooms
@@ -71,35 +83,60 @@ public class NewRoomManager : BaseManager
     public void ChangeRoom(string room)
     {
         if (SceneManager.GetActiveScene().name != "Gameplay")
-            throw new System.Exception("Tried to change room while not in gameplay");
+            throw new Exception("Tried to change room while not in gameplay");
 
         Debug.Log($"Changing room to {room}");
-        UnloadAllScenes(CurrentRoom);
-        LoadAllScenes(room);
+        _nextRoom = room;
+        UnloadAllScenes(CurrentRoom, UnloadRoomsBeforeTransition);
     }
+
+    private void UnloadRoomsBeforeTransition(string _)
+    {
+        LoadAllScenes(_nextRoom);
+    }
+
+    // Load / Unload
 
     private void LoadAllScenes(string room)
     {
+        _loadRoom = room;
+        _loadCallback = null;
         _loadCounter = SCENES_PER_ROOM;
+
         SceneManager.LoadSceneAsync(GetLayoutPath(room), LoadSceneMode.Additive);
         SceneManager.LoadSceneAsync(GetLogicPath(room), LoadSceneMode.Additive);
-        SceneManager.sceneLoaded += (Scene _, LoadSceneMode __) =>
-        {
-            if (--_loadCounter == 0)
-                SendRoomLoadedEvent(room);
-        };
+        SceneManager.sceneLoaded += OnLoadRoom;
     }
 
-    private void UnloadAllScenes(string room)
+    private void OnLoadRoom(Scene _, LoadSceneMode __)
     {
+        if (--_loadCounter == 0)
+        {
+            SceneManager.sceneLoaded -= OnLoadRoom;
+            SendRoomLoadedEvent(_loadRoom);
+            //_loadCallback(_loadRoom);
+        }
+    }
+
+    private void UnloadAllScenes(string room, Action<string> callback)
+    {
+        _unloadRoom = room;
+        _unloadCallback = callback;
         _unloadCounter = SCENES_PER_ROOM;
+
         SceneManager.UnloadSceneAsync(GetLayoutPath(room));
         SceneManager.UnloadSceneAsync(GetLogicPath(room));
-        SceneManager.sceneUnloaded += (Scene _) =>
+        SceneManager.sceneUnloaded += OnUnloadRoom;
+    }
+
+    private void OnUnloadRoom(Scene _)
+    {
+        if (--_unloadCounter == 0)
         {
-            if (--_unloadCounter == 0)
-                SendRoomUnloadedEvent(room);
-        };
+            SceneManager.sceneUnloaded -= OnUnloadRoom;
+            SendRoomUnloadedEvent(_unloadRoom);
+            _unloadCallback(_unloadRoom);
+        }
     }
 
     // Events
