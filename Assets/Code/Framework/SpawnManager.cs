@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class SpawnManager : BaseManager
 {
-    private GameObject _playerPrefab;
-
     private string _nextSpawnId;
     private Vector2 _storedPosition;
 
@@ -12,12 +10,14 @@ public class SpawnManager : BaseManager
 
     public override void OnInitialize()
     {
-        _playerPrefab = Resources.Load<GameObject>("Player");
-
         Core.NewRoomManager.OnGameplayLoaded += OnGameplayLoaded;
         Core.NewRoomManager.OnRoomLoaded += OnRoomLoaded;
-        //Core.RoomManager.OnRoomLoaded += OnRoomLoaded;
-        //Core.RoomManager.OnRoomUnloaded += OnRoomUnloaded;
+    }
+
+    public override void OnDispose()
+    {
+        Core.NewRoomManager.OnGameplayLoaded -= OnGameplayLoaded;
+        Core.NewRoomManager.OnRoomLoaded -= OnRoomLoaded;
     }
 
     private void OnGameplayLoaded()
@@ -34,26 +34,11 @@ public class SpawnManager : BaseManager
         // Set orientation
     }
 
-    public override void OnDispose()
-    {
-        //Core.RoomManager.OnRoomLoaded -= OnRoomLoaded;
-        //Core.RoomManager.OnRoomUnloaded -= OnRoomUnloaded;
-    }
-
     public void StorePlayerInfo(string targetId)
     {
         _nextSpawnId = targetId;
         _storedPosition = PlayerObject.transform.position;
         // Store orientation
-    }
-
-    private void SpawnPlayer()
-    {
-        SpawnInfo spawn = GetSpawnDoorInfo(_nextSpawnId);
-
-        PlayerObject = Object.Instantiate(_playerPrefab);
-        PlayerObject.transform.position = GetSpawnPosition(spawn, _storedPosition);
-        // Set orientation
     }
 
     private SpawnInfo GetSpawnDoorInfo(string spawnId)
@@ -90,17 +75,4 @@ public class SpawnManager : BaseManager
             storedPosition.y = spawn.customPositionY;
         return storedPosition;
     }
-
-    //private void OnRoomLoaded(string room)
-    //{
-    //    if (room == "MainMenu")
-    //        return;
-
-    //    SpawnPlayer();
-    //}
-
-    //private void OnRoomUnloaded(string room)
-    //{
-    //    //SpawnedPlayer = null;
-    //}
 }
