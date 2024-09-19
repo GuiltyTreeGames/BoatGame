@@ -6,24 +6,23 @@ public class CameraFollowPlayer : MonoBehaviour
 
     [SerializeField]
     float _damping;
-    [SerializeField]
-    private Vector2 _xBounds;
-    [SerializeField]
-    private Vector2 _yBounds;
 
+    private Vector2 _xBounds;
+    private Vector2 _yBounds;
     private Vector3 _lastUnsmoothPosition;
 
     public void UpdateBounds(Vector2 x, Vector2 y)
     {
         _xBounds = x;
         _yBounds = y;
-    }
 
-    void Start()
-    {
-        cam = GetComponent<Camera>();
         transform.position = CalculateTargetPosition();
         _lastUnsmoothPosition = transform.position;
+    }
+
+    void Awake()
+    {
+        cam = GetComponent<Camera>();
     }
 
     void LateUpdate()
@@ -73,15 +72,6 @@ public class CameraFollowPlayer : MonoBehaviour
     private Vector3 SmoothPosition(Vector3 position)
     {
         return new Vector3(((int)(position.x * 32)) / 32f, ((int)(position.y * 32)) / 32f, -10);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(new Vector2(_xBounds.x, _yBounds.x), new Vector2(_xBounds.x, _yBounds.y));
-        Gizmos.DrawLine(new Vector2(_xBounds.x, _yBounds.y), new Vector2(_xBounds.y, _yBounds.y));
-        Gizmos.DrawLine(new Vector2(_xBounds.y, _yBounds.y), new Vector2(_xBounds.y, _yBounds.x));
-        Gizmos.DrawLine(new Vector2(_xBounds.y, _yBounds.x), new Vector2(_xBounds.x, _yBounds.x));
     }
 
     private float Xsize => cam.orthographicSize * cam.aspect;
