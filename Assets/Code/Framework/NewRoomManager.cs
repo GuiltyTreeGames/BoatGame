@@ -6,6 +6,9 @@ public class NewRoomManager : BaseManager
 {
     public string CurrentRoom { get; private set; } = string.Empty;
 
+    private int _loadCounter;
+    private int _unloadCounter;
+
     public override void OnAllInitialized()
     {
         Debug.Log($"Starting in {SceneManager.GetActiveScene().path}");
@@ -80,14 +83,26 @@ public class NewRoomManager : BaseManager
 
     private void LoadAllScenes(string room)
     {
+        _loadCounter = SCENES_PER_ROOM;
         SceneManager.LoadSceneAsync(GetLayoutPath(room), LoadSceneMode.Additive);
         SceneManager.LoadSceneAsync(GetLogicPath(room), LoadSceneMode.Additive);
+        SceneManager.sceneLoaded += (Scene _, LoadSceneMode __) =>
+        {
+            if (--_loadCounter == 0)
+                SendRoomLoadedEvent(room);
+        };
     }
 
     private void UnloadAllScenes(string room)
     {
+        _unloadCounter = SCENES_PER_ROOM;
         SceneManager.UnloadSceneAsync(GetLayoutPath(room));
         SceneManager.UnloadSceneAsync(GetLogicPath(room));
+        SceneManager.sceneUnloaded += (Scene _) =>
+        {
+            if (--_unloadCounter == 0)
+                SendRoomUnloadedEvent(room);
+        };
     }
 
     // Events
@@ -116,6 +131,7 @@ public class NewRoomManager : BaseManager
         OnRoomUnloaded?.Invoke(room);
     }
 
+    private const int SCENES_PER_ROOM = 2;
     private const string GAMEPLAY_SCENE_PATH = "Design/Scenes/Ship";
     private string GetLayoutPath(string room) => $"{GAMEPLAY_SCENE_PATH}/{room}/LAYOUT";
     private string GetLogicPath(string room) => $"{GAMEPLAY_SCENE_PATH}/{room}/LOGIC";
