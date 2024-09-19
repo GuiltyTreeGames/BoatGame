@@ -15,6 +15,7 @@ public class SpawnManager : BaseManager
         _playerPrefab = Resources.Load<GameObject>("Player");
 
         Core.NewRoomManager.OnGameplayLoaded += OnGameplayLoaded;
+        Core.NewRoomManager.OnRoomLoaded += OnRoomLoaded;
         //Core.RoomManager.OnRoomLoaded += OnRoomLoaded;
         //Core.RoomManager.OnRoomUnloaded += OnRoomUnloaded;
     }
@@ -23,6 +24,14 @@ public class SpawnManager : BaseManager
     {
         Debug.Log("Caching player object");
         PlayerObject = GameObject.FindGameObjectWithTag("Player");
+    }
+
+    private void OnRoomLoaded(string _)
+    {
+        SpawnInfo spawn = GetSpawnDoorInfo(_nextSpawnId);
+
+        PlayerObject.transform.position = GetSpawnPosition(spawn, _storedPosition);
+        // Set orientation
     }
 
     public override void OnDispose()
@@ -82,16 +91,16 @@ public class SpawnManager : BaseManager
         return storedPosition;
     }
 
-    private void OnRoomLoaded(string room)
-    {
-        if (room == "MainMenu")
-            return;
+    //private void OnRoomLoaded(string room)
+    //{
+    //    if (room == "MainMenu")
+    //        return;
 
-        SpawnPlayer();
-    }
+    //    SpawnPlayer();
+    //}
 
-    private void OnRoomUnloaded(string room)
-    {
-        //SpawnedPlayer = null;
-    }
+    //private void OnRoomUnloaded(string room)
+    //{
+    //    //SpawnedPlayer = null;
+    //}
 }
